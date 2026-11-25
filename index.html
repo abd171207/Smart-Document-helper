@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusRule AI — Symbolic Tech Knowledge Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- External Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+    <!-- Multi-Format Client-Side Document Readers (PDF, DOCX, XLSX/CSV) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<header>
+    <div class="header-wrap">
+        <div class="brand">
+            <div class="brand-hex">N</div>
+            <div class="brand-title">
+                <h1>NexusRule AI</h1>
+                <span>Symbolic Tech Architecture &amp; Document Q&amp;A • Zero NLP / Zero RAG</span>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <a href="https://github.com/abd171207/Smart-Document-helper" target="_blank" rel="noopener noreferrer" class="gh-pill">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+                </svg>
+                GitHub Repository
+            </a>
+            <span class="acc-badge">100% Deterministic Accuracy</span>
+        </div>
+    </div>
+</header>
+
+<div class="dashboard">
+    <!-- LEFT COLUMN: TELEMETRY + DOCUMENT INGESTION -->
+    <aside class="panel">
+        <div class="panel-head">
+            <h2>Knowledge Source</h2>
+        </div>
+
+        <div class="kpi-mini-grid">
+            <div class="kpi-box">
+                <div class="kpi-lbl">Tech Entities</div>
+                <div class="kpi-val" id="k-topics">0</div>
+            </div>
+            <div class="kpi-box">
+                <div class="kpi-lbl">Total Facts</div>
+                <div class="kpi-val" id="k-facts">0</div>
+            </div>
+            <div class="kpi-box">
+                <div class="kpi-lbl">Logic Rules</div>
+                <div class="kpi-val" id="k-rules">0</div>
+            </div>
+            <div class="kpi-box">
+                <div class="kpi-lbl">Deduced</div>
+                <div class="kpi-val" id="k-deduced">0</div>
+            </div>
+        </div>
+
+        <div class="dropzone" id="drop-zone">
+            <p>Drop a document or select a file</p>
+            <span>PDF, Word (.docx), Excel (.xlsx), CSV, JSON, XML, HTML &amp; TXT</span>
+            <label for="file-input" class="upload-btn">Browse File</label>
+            <input type="file" id="file-input" accept=".pdf,.docx,.doc,.xlsx,.xls,.csv,.tsv,.json,.xml,.html,.htm,.txt,.md,.log,.yaml,.yml" onchange="handleFile(event)">
+        </div>
+
+        <textarea id="editor" placeholder="Enter technology facts or IF-THEN rules..."></textarea>
+
+        <div class="btn-group">
+            <button class="btn-cyan" onclick="compileKB()">Build Knowledge Base</button>
+            <button class="btn-dark" onclick="loadTechSample()">Tech Sample</button>
+            <button class="btn-dark" onclick="loadTechJSON()">JSON Spec</button>
+        </div>
+
+        <div id="status-bar" class="status-pill">Ready — Cloud &amp; AI Architecture sample loaded.</div>
+    </aside>
+
+    <!-- RIGHT COLUMN: INFERENCE CONSOLE + EXPLORER -->
+    <main class="right-stack">
+        <!-- Question & Reasoning Card -->
+        <section class="panel">
+            <div class="panel-head">
+                <h2>Symbolic Inference Console</h2>
+                <span class="tag">Multi-Hop BFS + Forward &amp; Backward Rules</span>
+            </div>
+
+            <div class="query-box">
+                <input type="text" id="q-input" placeholder="Ask about system architecture, dependencies, or deduced states..." onkeydown="if(event.key==='Enter') executeAsk()">
+                <button class="btn-cyan" style="white-space: nowrap;" onclick="executeAsk()">Infer Answer</button>
+            </div>
+
+            <div class="preset-row">
+                <span class="preset-chip" onclick="presetAsk('What is the Runtime Engine of Kubernetes Cluster?')">Runtime Engine?</span>
+                <span class="preset-chip" onclick="presetAsk('Where is Kubernetes Cluster deployed?')">Deployment Region?</span>
+                <span class="preset-chip" onclick="presetAsk('What does Vector Database require?')">Database Requirement?</span>
+                <span class="preset-chip" onclick="presetAsk('How is API Gateway related to Kubernetes Cluster?')">Multi-Hop Link</span>
+                <span class="preset-chip" onclick="presetAsk('What is High Traffic Spike?')">Rule 1: Traffic Spike</span>
+                <span class="preset-chip" onclick="presetAsk('What is Kubernetes Cluster?')">Rule 2: Cluster Status</span>
+                <span class="preset-chip" onclick="presetAsk('What is GPU Worker Node?')">Rule 3: Chained Deduction</span>
+            </div>
+
+            <div id="ans-card" class="answer-card" style="display: none;">
+                <div class="ans-top">
+                    <span class="tag" id="ans-method">Method</span>
+                    <span class="tag tag-emerald" id="ans-conf">100% Exact Match</span>
+                </div>
+                <div class="ans-main" id="ans-text"></div>
+                <div class="trace-panel" id="ans-trace"></div>
+            </div>
+        </section>
+
+        <!-- Knowledge Base & Benchmark Explorer -->
+        <section class="panel">
+            <div class="panel-head">
+                <div class="tab-strip">
+                    <button class="t-btn active" onclick="switchSub('sub-facts', this)">Facts &amp; Rules Table</button>
+                    <button class="t-btn" onclick="switchSub('sub-cards', this)">Entity Cards</button>
+                    <button class="t-btn" onclick="switchSub('sub-bench', this)">100% Accuracy Benchmark</button>
+                </div>
+                <input type="text" id="search-facts" style="max-width: 190px; padding: 0.4rem 0.7rem; font-size: 0.78rem;" placeholder="Filter facts..." oninput="renderTable()">
+            </div>
+
+            <!-- Sub-view 1: Facts Table -->
+            <div id="sub-facts" class="sub-view active">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Entity</th>
+                                <th>Relation</th>
+                                <th>Target / Value</th>
+                                <th>Provenance</th>
+                            </tr>
+                        </thead>
+                        <tbody id="facts-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Sub-view 2: Entity Frame Cards -->
+            <div id="sub-cards" class="sub-view">
+                <div id="entity-grid" class="cards-grid"></div>
+            </div>
+
+            <!-- Sub-view 3: 100% Accuracy Benchmark -->
+            <div id="sub-bench" class="sub-view">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.85rem;">
+                    <span id="bench-summary" style="font-size: 0.85rem; font-weight: 700; color: var(--emerald);">Click Run Benchmark to verify all 8 symbolic reasoning tests.</span>
+                    <button class="btn-cyan" style="padding: 0.48rem 0.95rem; font-size: 0.8rem;" onclick="runBenchmark()">Run 8-Case Benchmark</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Test Question</th>
+                                <th>Expected</th>
+                                <th>Generated Output</th>
+                                <th>Strategy</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bench-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<footer>
+    <span>NexusRule AI • Deterministic Symbolic Knowledge Representation &amp; Inference</span>
+    <span>Source Code: <a href="https://github.com/abd171207/Smart-Document-helper" target="_blank" rel="noopener noreferrer">https://github.com/abd171207/Smart-Document-helper</a></span>
+</footer>
+
+<!-- External Logic Script -->
+<script src="app.js"></script>
+</body>
+</html>
